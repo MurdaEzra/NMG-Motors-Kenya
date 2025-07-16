@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Inventory | NMG Motors Kenya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Inventory Specific Styles */
+        .inventory-hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+        }
+        
+        .inventory-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .inventory-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .filter-group {
+            margin-bottom: 0;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .filter-group select, 
+        .filter-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .filter-group select:focus, 
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .filter-reset {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .filter-reset:hover {
+            color: var(--secondary);
+        }
+        
+        /* Inventory Grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .inventory-card {
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .inventory-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .inventory-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .inventory-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .inventory-details {
+            padding: 25px;
+        }
+        
+        .inventory-details h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .inventory-meta {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--light-gray);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .meta-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .meta-item i {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+        
+        .inventory-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        
+        .pagination a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            margin: 0 5px;
+            background-color: white;
+            color: var(--dark);
+            text-decoration: none;
+            border: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .pagination a:hover, 
+        .pagination a.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .inventory-hero {
+                height: auto;
+                padding: 120px 0 60px;
+            }
+            
+            .inventory-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .filter-actions {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">NMG</div>
+                <div class="logo-text">NMG Motors<br><span>Kenya</span></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="inventory.html" class="active">Inventory</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <button id="mobile-menu-btn" class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="inventory.html" class="active">Inventory</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="inventory-hero">
+        <div class="container">
+            <h1 class="animate">Our Vehicle Inventory</h1>
+            <p class="animate delay-1">Browse our extensive collection of premium vehicles to find your perfect match.</p>
+            <a href="#inventory" class="btn btn-primary animate delay-2">View Inventory</a>
+        </div>
+    </section>
+
+    <!-- Inventory Section -->
+    <section class="section" id="inventory">
+        <div class="container">
+            <!-- Filter Section -->
+            <div class="filter-section animate">
+                <h3>Filter Vehicles</h3>
+                <form id="inventory-filter">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label for="category">Vehicle Type</label>
+                            <select id="category" name="category">
+                                <option value="">All Types</option>
+                                <option value="sedan">Sedan</option>
+                                <option value="suv">SUV</option>
+                                <option value="truck">Truck</option>
+                                <option value="luxury">Luxury</option>
+                                <option value="sports">Sports</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="make">Make</label>
+                            <select id="make" name="make">
+                                <option value="">All Makes</option>
+                                <option value="toyota">Toyota</option>
+                                <option value="mercedes">Mercedes-Benz</option>
+                                <option value="landrover">Land Rover</option>
+                                <option value="bmw">BMW</option>
+                                <option value="audi">Audi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="price-range">Price Range</label>
+                            <select id="price-range" name="price-range">
+                                <option value="">All Prices</option>
+                                <option value="0-5000000">Under KES 5M</option>
+                                <option value="5000000-10000000">KES 5M - 10M</option>
+                                <option value="10000000-15000000">KES 10M - 15M</option>
+                                <option value="15000000">Over KES 15M</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="year">Year</label>
+                            <select id="year" name="year">
+                                <option value="">All Years</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-actions">
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                            <button type="reset" class="filter-reset">Reset Filters</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Inventory Grid -->
+            <div class="inventory-grid">
+                <!-- Vehicle 1 -->
+                <div class="inventory-card animate delay-1">
+                    <div class="inventory-badge">New</div>
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>Land Rover Range Rover</h3>
+                        <p>2023 Model | Automatic | Petrol</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>8,000 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Petrol</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>SUV</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 18,500,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle 2 -->
+                <div class="inventory-card animate delay-2">
+                    <div class="inventory-badge">Certified</div>
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>Mercedes-Benz S-Class</h3>
+                        <p>2022 Model | Automatic | Hybrid</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>12,500 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Hybrid</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>Luxury</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 22,300,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle 3 -->
+                <div class="inventory-card animate delay-3">
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>Toyota Land Cruiser</h3>
+                        <p>2021 Model | Automatic | Diesel</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>25,000 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Diesel</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>SUV</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 12,800,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle 4 -->
+                <div class="inventory-card animate delay-1">
+                    <div class="inventory-badge">New</div>
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>BMW 7 Series</h3>
+                        <p>2023 Model | Automatic | Petrol</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>5,000 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Petrol</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>Luxury</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 16,500,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle 5 -->
+                <div class="inventory-card animate delay-2">
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1783&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>Audi Q7</h3>
+                        <p>2020 Model | Automatic | Diesel</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>30,000 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Diesel</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>SUV</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 9,800,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle 6 -->
+                <div class="inventory-card animate delay-3">
+                    <div class="inventory-badge">Certified</div>
+                    <div class="inventory-image" style="background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="inventory-details">
+                        <h3>Porsche 911</h3>
+                        <p>2022 Model | Automatic | Petrol</p>
+                        <div class="inventory-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>7,500 km</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-gas-pump"></i>
+                                <span>Petrol</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-car"></i>
+                                <span>Sports</span>
+                            </div>
+                        </div>
+                        <div class="inventory-price">
+                            <div class="price">KES 25,000,000</div>
+                            <a href="#" class="btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination animate">
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#"><i class="fas fa-chevron-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">
+                        <div class="logo-icon">NMG</div>
+                        <div class="logo-text" style="color: white;">NMG Motors<br><span>Kenya</span></div>
+                    </div>
+                    <p>Your premier destination for luxury and premium vehicles in Kenya. Experience the NMG Motors difference today.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="inventory.html"><i class="fas fa-chevron-right"></i> Inventory</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Vehicle Brands</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Land Rover</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Mercedes-Benz</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> BMW</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Audi</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Toyota</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter for the latest offers and updates.</p>
+                    <form style="display: flex; gap: 10px; margin-top: 20px;">
+                        <input type="email" placeholder="Your Email" style="flex: 1; padding: 12px; border: none; border-radius: 0;">
+                        <button type="submit" class="btn" style="padding: 12px 20px; margin: 0;"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 NMG Motors Kenya. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: var(--secondary);"></i> for Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Inventory Filter Functionality
+        document.getElementById('inventory-filter').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // This is where you would filter the inventory based on the selected filters
+            // For now, we'll just log the form data
+            const formData = new FormData(this);
+            const filters = Object.fromEntries(formData.entries());
+            console.log('Filters applied:', filters);
+            
+            // In a real implementation, you would:
+            // 1. Send the filters to your backend (Supabase)
+            // 2. Get the filtered results
+            // 3. Update the inventory grid with the filtered vehicles
+            alert('Filter functionality will be fully implemented with Supabase integration');
+        });
+        
+        // Reset filters
+        document.querySelector('.filter-reset').addEventListener('click', function() {
+            document.getElementById('inventory-filter').reset();
+            // In a real implementation, you would reload all vehicles
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services | NMG Motors Kenya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Services Page Specific Styles */
+        .services-hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+        }
+        
+        .services-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .services-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .service-content {
+            padding: 30px;
+        }
+        
+        .service-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .service-content p {
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+        
+        /* Service Features */
+        .service-features {
+            background-color: var(--light-gray);
+            padding: 100px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 5px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 30px;
+            color: var(--secondary);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover .feature-icon {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Testimonials */
+        .testimonials-section {
+            padding: 100px 0;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 5px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+        }
+        
+        .testimonial-card:before {
+            content: """;
+            position : absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--light-gray);
+            line-height: 1;
+        }
+        
+        .testimonial-content {
+            margin: 40px 0 30px;
+            font-style: italic;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .client-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .client-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 15px;
+        }
+        
+        .client-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .client-info p {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .services-hero {
+                height: auto;
+                padding: 120px 0 60px;
+            }
+            
+            .services-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">NMG</div>
+                <div class="logo-text">NMG Motors<br><span>Kenya</span></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="inventory.html">Inventory</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="services.html" class="active">Services</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <button id="mobile-menu-btn" class="mobile-menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="inventory.html">Inventory</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="services-hero">
+        <div class="container">
+            <h1 class="animate">Our Premium Services</h1>
+            <p class="animate delay-1">Beyond exceptional vehicles, we offer comprehensive services to enhance your ownership experience.</p>
+        </div>
+    </section>
+
+    <!-- Main Services -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header animate">
+                <h2>Comprehensive Automotive Solutions</h2>
+                <p>From purchase to maintenance, we provide end-to-end services for your luxury vehicle needs.</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Service 1 -->
+                <div class="service-card animate delay-1">
+                    <div class="service-image" style="background: url('https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="service-content">
+                        <h3>Vehicle Sales</h3>
+                        <p>Our extensive inventory of new and certified pre-owned luxury vehicles offers something for every discerning buyer. Let our experts guide you to your perfect match.</p>
+                        <a href="inventory.html" class="btn">Browse Inventory</a>
+                    </div>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card animate delay-2">
+                    <div class="service-image" style="background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1783&q=80') center center/cover;"></div>
+                    <div class="service-content">
+                        <h3>Financing Solutions</h3>
+                        <p>Flexible financing options tailored to your needs. Competitive rates, quick approvals, and personalized payment plans make ownership more accessible.</p>
+                        <a href="#" class="btn">Learn More</a>
+                    </div>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card animate delay-3">
+                    <div class="service-image" style="background: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="service-content">
+                        <h3>Maintenance & Repair</h3>
+                        <p>Factory-trained technicians using genuine parts ensure your vehicle receives the care it deserves. State-of-the-art facilities for all maintenance needs.</p>
+                        <a href="#" class="btn">Schedule Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Features -->
+    <section class="service-features">
+        <div class="container">
+            <div class="section-header animate">
+                <h2>Why Choose Our Services</h2>
+                <p>Experience the NMG Motors difference with these premium service features.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card animate delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Extended Warranties</h3>
+                    <p>Comprehensive coverage options for peace of mind beyond the standard warranty period.</p>
+                </div>
+                
+                <div class="feature-card animate delay-2">
+                    <div class="feature-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Vehicle Delivery</h3>
+                    <p>Concierge delivery service brings your new vehicle directly to your preferred location.</p>
+                </div>
+                
+                <div class="feature-card animate delay-3">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>Trade-In Appraisal</h3>
+                    <p>Get a fair market value assessment for your current vehicle with our easy trade-in process.</p>
+                </div>
+                
+                <div class="feature-card animate delay-1">
+                    <div class="feature-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <h3>Roadside Assistance</h3>
+                    <p>24/7 support for emergencies, available to all our customers nationwide.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="testimonial-card animate">
+                <div class="testimonial-content">
+                    "The service team at NMG Motors is exceptional. They treated my car with care and completed the work faster than promised. Their attention to detail and customer service is unmatched in Nairobi."
+                </div>
+                <div class="client-info">
+                    <div class="client-avatar" style="background: url('https://randomuser.me/api/portraits/men/32.jpg') center center/cover;"></div>
+                    <h4>Michael Njenga</h4>
+                    <p>Range Rover Owner</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section" style="background-color: var(--primary); color: white;">
+        <div class="container">
+            <div class="section-header animate">
+                <h2>Ready to Experience Premium Service?</h2>
+                <p>Contact us today to schedule a service appointment or learn more about our offerings.</p>
+                <a href="contact.html" class="btn btn-primary animate delay-1">Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 20px;">
+                        <div class="logo-icon">NMG</div>
+                        <div class="logo-text" style="color: white;">NMG Motors<br><span>Kenya</span></div>
+                    </div>
+                    <p>Your premier destination for luxury and premium vehicles in Kenya. Experience the NMG Motors difference today.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="inventory.html"><i class="fas fa-chevron-right"></i> Inventory</a></li>
+                        <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="services.html"><i class="fas fa-chevron-right"></i> Services</a></li>
+                        <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Vehicle Brands</h4>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Land Rover</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Mercedes-Benz</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> BMW</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Audi</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Toyota</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter for the latest offers and updates.</p>
+                    <form style="display: flex; gap: 10px; margin-top: 20px;">
+                        <input type="email" placeholder="Your Email" style="flex: 1; padding: 12px; border: none; border-radius: 0;">
+                        <button type="submit" class="btn" style="padding: 12px 20px; margin: 0;"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 NMG Motors Kenya. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: var(--secondary);"></i> for Kenya</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
