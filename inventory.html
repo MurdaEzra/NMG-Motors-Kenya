@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Inventory Specific Styles */
+        /* Inventory Page Specific Styles */
         .inventory-hero {
             height: 60vh;
             display: flex;
@@ -203,7 +203,164 @@
             border-color: var(--secondary);
         }
         
+        /* Car Details Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .car-modal {
+            background-color: white;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateY(50px);
+            transition: var(--transition);
+        }
+        
+        .modal-overlay.active .car-modal {
+            transform: translateY(0);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            border: none;
+            font-size: 20px;
+        }
+        
+        .car-modal-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .car-gallery {
+            position: relative;
+        }
+        
+        .main-car-image {
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 5px 0 0 0;
+        }
+        
+        .car-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .car-thumbnail {
+            height: 80px;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .car-thumbnail:hover, 
+        .car-thumbnail.active {
+            border-color: var(--secondary);
+        }
+        
+        .car-details {
+            padding: 30px;
+        }
+        
+        .car-details h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .car-price-large {
+            font-size: 2rem;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .car-specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .spec-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+        }
+        
+        .car-description {
+            margin: 30px 0;
+            color: var(--gray);
+            line-height: 1.7;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
         /* Responsive */
+        @media (max-width: 992px) {
+            .car-modal-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-car-image {
+                height: 300px;
+                border-radius: 5px 5px 0 0;
+            }
+        }
+        
         @media (max-width: 768px) {
             .inventory-hero {
                 height: auto;
@@ -218,6 +375,14 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: stretch;
+            }
+            
+            .car-specs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -355,7 +520,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 18,500,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="1">Details</button>
                         </div>
                     </div>
                 </div>
@@ -383,7 +548,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 22,300,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="2">Details</button>
                         </div>
                     </div>
                 </div>
@@ -410,7 +575,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 12,800,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="3">Details</button>
                         </div>
                     </div>
                 </div>
@@ -438,7 +603,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 16,500,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="4">Details</button>
                         </div>
                     </div>
                 </div>
@@ -465,7 +630,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 9,800,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="5">Details</button>
                         </div>
                     </div>
                 </div>
@@ -493,7 +658,7 @@
                         </div>
                         <div class="inventory-price">
                             <div class="price">KES 25,000,000</div>
-                            <a href="#" class="btn">View Details</a>
+                            <button class="btn view-details" data-car="6">Details</button>
                         </div>
                     </div>
                 </div>
@@ -509,6 +674,95 @@
             </div>
         </div>
     </section>
+
+    <!-- Car Details Modal -->
+    <div class="modal-overlay" id="carModal">
+        <button class="modal-close" id="closeModal">&times;</button>
+        <div class="car-modal">
+            <div class="car-modal-content">
+                <div class="car-gallery">
+                    <div class="main-car-image" id="mainCarImage" style="background: url('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;"></div>
+                    <div class="car-thumbnails">
+                        <div class="car-thumbnail active" style="background: url('https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;" data-image="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"></div>
+                        <div class="car-thumbnail" style="background: url('https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;" data-image="https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"></div>
+                        <div class="car-thumbnail" style="background: url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;" data-image="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"></div>
+                        <div class="car-thumbnail" style="background: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') center center/cover;" data-image="https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"></div>
+                    </div>
+                </div>
+                <div class="car-details">
+                    <h2 id="modalCarTitle">Land Rover Range Rover</h2>
+                    <div class="car-price-large" id="modalCarPrice">KES 18,500,000</div>
+                    
+                    <div class="car-specs-grid">
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div>
+                                <h4>Year</h4>
+                                <p id="modalCarYear">2023</p>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div>
+                                <h4>Mileage</h4>
+                                <p id="modalCarMileage">8,000 km</p>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-gas-pump"></i>
+                            </div>
+                            <div>
+                                <h4>Fuel Type</h4>
+                                <p id="modalCarFuel">Petrol</p>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div>
+                                <h4>Transmission</h4>
+                                <p id="modalCarTransmission">Automatic</p>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div>
+                                <h4>Body Type</h4>
+                                <p id="modalCarBody">SUV</p>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div>
+                                <h4>Color</h4>
+                                <p id="modalCarColor">Black</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="car-description" id="modalCarDescription">
+                        <p>The Range Rover combines peerless refinement with uncompromised capability. This 2023 model features the latest technology including a state-of-the-art infotainment system, premium leather interiors, and advanced driver assistance systems.</p>
+                        <p>With its powerful engine and sophisticated all-wheel-drive system, this vehicle delivers exceptional performance both on and off the road. The spacious interior provides luxury seating for five adults with ample cargo space.</p>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <a href="#" class="btn btn-primary">Book Test Drive</a>
+                        <a href="#" class="btn">Contact Sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -568,7 +822,129 @@
 
     <script src="assets/js/main.js"></script>
     <script>
-        // Inventory Filter Functionality
+        // Car data for the modal
+        const cars = {
+            1: {
+                title: "Land Rover Range Rover",
+                price: "KES 18,500,000",
+                year: "2023",
+                mileage: "8,000 km",
+                fuel: "Petrol",
+                transmission: "Automatic",
+                body: "SUV",
+                color: "Black",
+                description: "The Range Rover combines peerless refinement with uncompromised capability. This 2023 model features the latest technology including a state-of-the-art infotainment system, premium leather interiors, and advanced driver assistance systems. With its powerful engine and sophisticated all-wheel-drive system, this vehicle delivers exceptional performance both on and off the road. The spacious interior provides luxury seating for five adults with ample cargo space.",
+                images: [
+                    "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1542362567-b07e54358753?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
+                ]
+            },
+            2: {
+                title: "Mercedes-Benz S-Class",
+                price: "KES 22,300,000",
+                year: "2022",
+                mileage: "12,500 km",
+                fuel: "Hybrid",
+                transmission: "Automatic",
+                body: "Luxury Sedan",
+                color: "Silver",
+                description: "The Mercedes-Benz S-Class represents the pinnacle of automotive luxury and innovation. This 2022 hybrid model combines effortless power with remarkable efficiency. The cabin is a masterpiece of craftsmanship with premium materials throughout, featuring massaging seats, ambient lighting, and the latest MBUX infotainment system. Advanced safety features and autonomous driving capabilities make every journey relaxing and secure.",
+                images: [
+                    "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1783&q=80",
+                    "https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
+                ]
+            },
+            3: {
+                title: "Toyota Land Cruiser",
+                price: "KES 12,800,000",
+                year: "2021",
+                mileage: "25,000 km",
+                fuel: "Diesel",
+                transmission: "Automatic",
+                body: "SUV",
+                color: "White",
+                description: "The Toyota Land Cruiser is renowned for its legendary reliability and off-road capability. This 2021 diesel model offers exceptional fuel efficiency without compromising on power. The rugged exterior hides a surprisingly luxurious interior with leather seats, tri-zone climate control, and advanced off-road technologies. Whether navigating city streets or remote trails, the Land Cruiser delivers confidence in any environment.",
+                images: [
+                    "https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                    "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80"
+                ]
+            }
+        };
+
+        // Modal functionality
+        const modal = document.getElementById('carModal');
+        const closeModal = document.getElementById('closeModal');
+        const viewDetailsButtons = document.querySelectorAll('.view-details');
+        const mainCarImage = document.getElementById('mainCarImage');
+        const thumbnailsContainer = document.querySelector('.car-thumbnails');
+
+        // Open modal with car details
+        viewDetailsButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const carId = this.getAttribute('data-car');
+                const car = cars[carId];
+                
+                if (car) {
+                    // Update modal content
+                    document.getElementById('modalCarTitle').textContent = car.title;
+                    document.getElementById('modalCarPrice').textContent = car.price;
+                    document.getElementById('modalCarYear').textContent = car.year;
+                    document.getElementById('modalCarMileage').textContent = car.mileage;
+                    document.getElementById('modalCarFuel').textContent = car.fuel;
+                    document.getElementById('modalCarTransmission').textContent = car.transmission;
+                    document.getElementById('modalCarBody').textContent = car.body;
+                    document.getElementById('modalCarColor').textContent = car.color;
+                    document.getElementById('modalCarDescription').innerHTML = `<p>${car.description}</p>`;
+                    
+                    // Update main image
+                    mainCarImage.style.backgroundImage = `url('${car.images[0]}')`;
+                    
+                    // Update thumbnails
+                    thumbnailsContainer.innerHTML = '';
+                    car.images.forEach((image, index) => {
+                        const thumbnail = document.createElement('div');
+                        thumbnail.className = `car-thumbnail ${index === 0 ? 'active' : ''}`;
+                        thumbnail.style.backgroundImage = `url('${image}')`;
+                        thumbnail.setAttribute('data-image', image);
+                        thumbnail.addEventListener('click', function() {
+                            // Update main image
+                            mainCarImage.style.backgroundImage = `url('${this.getAttribute('data-image')}')`;
+                            
+                            // Update active thumbnail
+                            document.querySelectorAll('.car-thumbnail').forEach(t => t.classList.remove('active'));
+                            this.classList.add('active');
+                        });
+                        thumbnailsContainer.appendChild(thumbnail);
+                    });
+                    
+                    // Show modal
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Filter functionality
         document.getElementById('inventory-filter').addEventListener('submit', function(e) {
             e.preventDefault();
             // This is where you would filter the inventory based on the selected filters
