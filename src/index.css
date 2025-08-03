@@ -14,7 +14,7 @@
 }
 /* Add padding to account for fixed navbar */
 body {
-  padding-top: 70px;
+  padding-top: 0px;
 }
 /* Global styles for headings */
 h1, h2, h3, h4, h5, h6 {
