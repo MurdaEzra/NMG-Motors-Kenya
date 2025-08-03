@@ -53,7 +53,7 @@ export const cars: Car[] = [{
   torque: '500Nm',
   available: true,
   featured: true,
-  images: ['https://img.freepik.com/free-photo/blue-jeep-parking-public-zone_114579-4042.jpg', 'https://img.freepik.com/free-photo/car-interior-luxury_1303-15541.jpg', 'https://img.freepik.com/free-photo/closeup-shot-headlights-modern-prestigious-car_181624-46701.jpg'],
+  images: ['https://img.freepik.com/free-photo/blue-jeep-parking-public-zone_114579-4042.jpg', 'angle 2', 'angle 3'],
   description: 'The Toyota Land Cruiser Prado is a full-size four-wheel drive vehicle in the Land Cruiser range. It is produced by the Japanese car maker Toyota. The Prado is one of the smaller vehicles in the Land Cruiser range.',
   additionalSpecs: {
     sunroof: true,
@@ -91,7 +91,7 @@ export const cars: Car[] = [{
   torque: '520Nm',
   available: true,
   featured: true,
-  images: ['https://img.freepik.com/free-photo/white-premium-city-crossover-car-road_114579-4030.jpg', 'https://img.freepik.com/free-photo/luxury-car-interior-steering-wheel_1303-15552.jpg', 'https://img.freepik.com/free-photo/headlights-new-red-car_1359-323.jpg'],
+  images: ['https://images.unsplash.com/photo-1580273916550-e323be2ae537?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80', 'angle 2', 'angle 3'],
   description: 'The Mercedes-Benz E-Class is a range of executive cars manufactured by German automaker Mercedes-Benz in various engine and body configurations.',
   additionalSpecs: {
     sunroof: true,

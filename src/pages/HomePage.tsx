@@ -9,17 +9,17 @@ const HomePage = () => {
   return <div className="w-full bg-[#FBFFFE]">
       {/* Hero Section */}
       <section className="relative bg-cover bg-center h-[70vh] flex items-center" style={{
-      backgroundImage: "url('https://img.freepik.com/free-photo/elegant-white-car-stands-dealer-s-showroom_146671-16260.jpg')",
-      backgroundPosition: 'center 30%'
+      backgroundImage: "url('https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80')",
+      backgroundPosition: 'center 50%'
     }}>
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-2xl">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Find Your Perfect Car at NMG Motors Kenya
+              Experience Luxury Driving in Kenya
             </h1>
             <p className="text-xl text-white mb-8">
-              Premium selection of quality vehicles at competitive prices
+              Discover premium vehicles with exceptional service at NMG Motors Kenya. Your journey to automotive excellence begins here.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/vehicles" className="bg-[#E6AF2E] hover:bg-[#A3320B] text-[#001514] font-bold py-3 px-6 rounded-lg transition-colors">

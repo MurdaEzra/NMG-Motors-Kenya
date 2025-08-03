@@ -11,8 +11,8 @@ const Footer = () => {
               NMG MOTORS KENYA
             </h3>
             <p className="mb-4">
-              Your trusted partner for quality vehicles in Kenya. We provide a
-              wide range of cars with excellent service and support.
+              Your premier destination for luxury and premium vehicles in Kenya with 100% customer satisfaction. Experience the NMG Motors difference today.
+              
             </p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" className="hover:text-[#E6AF2E]" aria-label="Facebook">
@@ -66,11 +66,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <PhoneIcon className="h-5 w-5 mr-2 text-[#E6AF2E]" />
-                <span>+254 700 000 000</span>
+                <span>+254 728135200</span>
               </li>
               <li className="flex items-center">
                 <MailIcon className="h-5 w-5 mr-2 text-[#E6AF2E]" />
-                <span>info@nmgmotors.co.ke</span>
+                <span>nmgmotorskenya.com</span>
               </li>
             </ul>
           </div>
