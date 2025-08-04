@@ -1,4 +1,3 @@
-// Mock car data for the dealership
 export interface Car {
   id: string;
   brand: string;
@@ -15,7 +14,7 @@ export interface Car {
   featured: boolean;
   images: string[];
   description: string;
-  // Additional specifications
+  
   additionalSpecs: {
     sunroof: boolean;
     trimmings: string;
@@ -267,7 +266,46 @@ export const cars: Car[] = [{
       brakes: true
     }
   }
-}];
+},{
+  id: '7',
+  brand: 'Toyota',
+  model: 'Mark X',
+  year: 2013,
+  price: 1450000,
+  mileage: 8000,
+  engineSize: '3.0L',
+  fuelType: 'Petrol',
+  horsePower: 362,
+  transmission: 'Automatic',
+  torque: '520Nm',
+  available: true,
+  featured: true,
+  images: ['./images/Mark X/angle 1.jpeg', 'https://img.freepik.com/free-photo/luxury-car-interior-dashboard_1303-15538.jpg', 'https://img.freepik.com/free-photo/headlights-new-red-car_1359-323.jpg'],
+  description: 'The Toyota Mark X is a mid-size luxury SUV produced by the Japanese automaker Toyota. It has multiple after-market modifications',
+  additionalSpecs: {
+    sunroof: true,
+    trimmings: 'Natural Grain Wood and Aluminum',
+    soundSystem: 'Burmester Surround Sound System',
+    seatMaterial: 'Leather',
+    airConditioning: 'Dual Zone Climate Control',
+    phoneConnectivity: true,
+    infotainmentSystem: 'MBUX with Voice Control',
+    cigaretteLighterPort: true,
+    isofixAnchors: true,
+    radioSystem: 'Digital Radio with Bluetooth, USB, AUX',
+    conditionScore: 5,
+    condition: {
+      exterior: true,
+      interior: true,
+      engine: true,
+      transmission: true,
+      electronics: true,
+      suspension: true,
+      brakes: true
+    }
+  }
+  
+} ];
 // Helper function to get similar cars based on brand
 export const getSimilarCars = (currentCarId: string, brand: string, limit: number = 3): Car[] => {
   return cars.filter(car => car.brand === brand && car.id !== currentCarId).slice(0, limit);

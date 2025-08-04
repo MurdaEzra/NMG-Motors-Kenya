@@ -6,6 +6,7 @@ import SimilarCars from '../components/SimilarCars';
 import VehicleSpecsDropdown from '../components/VehicleSpecsDropdown';
 import VehicleCondition from '../components/VehicleCondition';
 import { CalendarIcon, GaugeIcon, FuelIcon, ZapIcon, ActivityIcon, CheckIcon, XIcon, ChevronLeftIcon, ChevronRightIcon, StarIcon } from 'lucide-react';
+
 const VehicleDetailPage = () => {
   const {
     id
