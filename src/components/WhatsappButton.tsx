@@ -7,7 +7,7 @@ const WhatsappButton: React.FC<WhatsappButtonProps> = ({
   car
 }) => {
   const handleWhatsappInquiry = () => {
-    const phoneNumber = '254700000000'; // Replace with actual WhatsApp number
+    const phoneNumber = '+254728135200'; // Replace with actual WhatsApp number
     // Create message with car details
     const message = `Hello, I'm interested in the ${car.year} ${car.brand} ${car.model} (${car.engineSize} ${car.fuelType}) priced at KES ${car.price.toLocaleString()}. Please provide more information.`;
     // Create URL with car image - Note: This doesn't actually send the image through WhatsApp

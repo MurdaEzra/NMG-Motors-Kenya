@@ -10,16 +10,16 @@ import { CalendarIcon, GaugeIcon, FuelIcon, ZapIcon, ActivityIcon, CheckIcon, XI
 const VehicleDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [cars, setCars] = useState([]);
-  const [car, setCar] = useState(null);
-  const [similarCars, setSimilarCars] = useState([]);
+  const [cars, setCars] = useState<any[]>([]);
+  const [car, setCar] = useState<any>(null);
+  const [similarCars, setSimilarCars] = useState<any[]>([]);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     fetchCars().then(data => {
       setCars(data);
-      const foundCar = data.find(car => car.id === id);
+      const foundCar = data.find((car: any) => car.id === id);
       setCar(foundCar);
       if (foundCar) {
         setSimilarCars(getSimilarCars(data, foundCar.id, foundCar.brand));
@@ -37,13 +37,17 @@ const VehicleDetailPage = () => {
 
   // Handle image navigation
   const nextImage = () => {
-    if (!car) return;
+    if (!car || !car.images || car.images.length === 0) return;
     setActiveImageIndex(prevIndex => prevIndex === car.images.length - 1 ? 0 : prevIndex + 1);
   };
   const prevImage = () => {
-    if (!car) return;
+    if (!car || !car.images || car.images.length === 0) return;
     setActiveImageIndex(prevIndex => prevIndex === 0 ? car.images.length - 1 : prevIndex - 1);
   };
+
+  // Helper for safe image src
+  const getImageSrc = (url: string | undefined) =>
+    url && url.startsWith('http') ? url : 'https://placehold.co/600x400?text=No+Image';
 
   if (!car) {
     return (
@@ -73,7 +77,14 @@ const VehicleDetailPage = () => {
           {/* Image Gallery */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="relative h-[300px] md:h-[400px]">
-              <img src={car.images[activeImageIndex]} alt={`${car.brand} ${car.model}`} className="w-full h-full object-cover" />
+              <img
+                src={getImageSrc(car.images && car.images[activeImageIndex])}
+                alt={`${car.brand} ${car.model}`}
+                className="w-full h-full object-cover"
+                onError={e => {
+                  (e.target as HTMLImageElement).src = 'https://placehold.co/600x400?text=No+Image';
+                }}
+              />
               {/* Image navigation buttons */}
               <button onClick={prevImage} className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-opacity">
                 <ChevronLeftIcon className="h-6 w-6" />
@@ -83,16 +94,31 @@ const VehicleDetailPage = () => {
               </button>
               {/* Image counter */}
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-                {activeImageIndex + 1} / {car.images.length}
+                {car.images && car.images.length > 0 ? `${activeImageIndex + 1} / ${car.images.length}` : '0 / 0'}
               </div>
             </div>
             {/* Thumbnail images */}
             <div className="flex p-2 overflow-x-auto">
-              {car.images.map((image, index) => (
-                <div key={index} className={`h-16 w-24 flex-shrink-0 mx-1 cursor-pointer border-2 ${activeImageIndex === index ? 'border-[#A3320B]' : 'border-transparent'}`} onClick={() => setActiveImageIndex(index)}>
-                  <img src={image} alt={`${car.brand} ${car.model} thumbnail ${index + 1}`} className="w-full h-full object-cover" />
+              {car.images && car.images.length > 0 ? car.images.map((image: string, index: number) => (
+                <div
+                  key={index}
+                  className={`h-16 w-24 flex-shrink-0 mx-1 cursor-pointer border-2 ${activeImageIndex === index ? 'border-[#A3320B]' : 'border-transparent'}`}
+                  onClick={() => setActiveImageIndex(index)}
+                >
+                  <img
+                    src={getImageSrc(image)}
+                    alt={`${car.brand} ${car.model} thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = 'https://placehold.co/200x100?text=No+Image';
+                    }}
+                  />
                 </div>
-              ))}
+              )) : (
+                <div className="h-16 w-24 flex items-center justify-center text-gray-400">
+                  No Images
+                </div>
+              )}
             </div>
           </div>
           {/* Car Details */}
@@ -112,11 +138,11 @@ const VehicleDetailPage = () => {
               </span>
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className={`h-5 w-5 ${i < car.additionalSpecs.conditionScore ? 'text-[#E6AF2E] fill-[#E6AF2E]' : 'text-gray-300'}`} />
+                  <StarIcon key={i} className={`h-5 w-5 ${i < (car.additionalSpecs?.conditionScore || 0) ? 'text-[#E6AF2E] fill-[#E6AF2E]' : 'text-gray-300'}`} />
                 ))}
               </div>
               <span className="ml-2 text-sm text-gray-600 font-cambria">
-                {car.additionalSpecs.conditionScore}/5
+                {car.additionalSpecs?.conditionScore || 0}/5
               </span>
             </div>
             <div className="mt-4">
@@ -143,7 +169,7 @@ const VehicleDetailPage = () => {
                       Mileage
                     </p>
                     <p className="font-semibold font-cambria">
-                      {car.mileage.toLocaleString()} km
+                      {car.mileage?.toLocaleString()} km
                     </p>
                   </div>
                 </div>

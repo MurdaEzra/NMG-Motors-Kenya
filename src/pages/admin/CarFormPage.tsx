@@ -9,7 +9,7 @@ const CarFormPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const isEditing = Boolean(id);
   const [submitting, setSubmitting] = useState(false);
-  const [uploading, setUploading] = useState<number | null>(null);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch cars and find existing car if editing
@@ -66,16 +66,27 @@ const CarFormPage: React.FC = () => {
   useEffect(() => {
     if (existingCar) {
       setFormData(existingCar);
+      setImagePreviews(existingCar.images || []);
     }
   }, [existingCar]);
 
-  // Add a new state to track local previews
+  // Track local previews for all images
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  // Handle image upload to Supabase
-  const uploadImage = async (file: File, index: number, localUrl: string) => {
-    setUploading(index);
-    try {
+  // Handle multiple image selection and upload
+  const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+
+    // Show local previews immediately
+    const localPreviews = Array.from(files).map(file => URL.createObjectURL(file));
+    setImagePreviews(prev => [...prev, ...localPreviews]);
+
+    // Upload all images to Supabase
+    const uploadedUrls: string[] = [];
+    for (const file of files) {
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `${fileName}`;
@@ -84,85 +95,40 @@ const CarFormPage: React.FC = () => {
         .from('car-images')
         .upload(filePath, file);
 
-      if (error) throw error;
+      if (error) {
+        alert('Image upload failed. Please try again.');
+        setUploading(false);
+        return;
+      }
 
       const { data } = supabase.storage
         .from('car-images')
         .getPublicUrl(filePath);
 
-      const publicUrl = data.publicUrl;
-
-      // Update images in formData
-      const newImages = [...(formData.images || [])];
-      newImages[index] = publicUrl;
-      setFormData(prev => ({
-        ...prev,
-        images: newImages
-      }));
-
-      // Remove local preview after upload
-      setImagePreviews(prev => {
-        const arr = [...prev];
-        arr[index] = '';
-        return arr;
-      });
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Image upload failed. Please try again.');
-    } finally {
-      setUploading(null);
+      uploadedUrls.push(data.publicUrl);
     }
-  };
 
-  // Handle image file selection
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      // Show local preview
-      const localUrl = URL.createObjectURL(file);
-      setImagePreviews(prev => {
-        const arr = [...prev];
-        arr[index] = localUrl;
-        return arr;
-      });
-      // Start upload
-      uploadImage(file, index, localUrl);
-    }
-  };
-
-  // Add new image field
-  const addImageField = () => {
+    // Update formData images with all uploaded URLs
     setFormData(prev => ({
       ...prev,
-      images: [...(prev.images || []), '']
+      images: [...(prev.images || []), ...uploadedUrls]
     }));
+
+    // Remove local previews after upload (optional, or keep for instant feedback)
+    setTimeout(() => {
+      setImagePreviews(prev => prev.slice(0, (prev.length - localPreviews.length)));
+    }, 2000);
+
+    setUploading(false);
   };
 
-  // Remove image field and delete from storage
-  const removeImageField = async (index: number) => {
-    const url = formData.images?.[index];
-    const newImages = [...(formData.images || [])];
-
-    // Delete from Supabase if URL exists
-    if (url && url.includes('car-images')) {
-      try {
-        // Extract filename from URL
-        const fileName = url.split('/').pop();
-        if (fileName) {
-          await supabase.storage
-            .from('car-images')
-            .remove([fileName]);
-        }
-      } catch (error) {
-        console.error('Error deleting image:', error);
-      }
-    }
-
-    newImages.splice(index, 1);
+  // Remove image (from both previews and formData)
+  const removeImage = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      images: newImages
+      images: prev.images?.filter((_, i) => i !== index) || []
     }));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
   };
 
   // Handle form field changes
@@ -409,7 +375,8 @@ const CarFormPage: React.FC = () => {
     );
   }
 
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <button onClick={() => navigate('/admin/cars')} className="p-2 hover:bg-gray-200 rounded-full">
@@ -530,64 +497,59 @@ const CarFormPage: React.FC = () => {
             <h2 className="text-lg font-bold font-montserrat">Car Images</h2>
             <button
               type="button"
-              onClick={addImageField}
+              onClick={() => fileInputRef.current?.click()}
               className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
             >
               <PlusIcon className="h-4 w-4 mr-1" />
-              Add Image
+              Add Images
             </button>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              ref={fileInputRef}
+              onChange={handleImagesChange}
+              className="hidden"
+            />
           </div>
           <div className="space-y-4">
-            {formData.images?.map((image, index) => (
+            {(formData.images || []).map((image, index) => (
               <div key={index} className="flex items-center space-x-4">
                 <div className="flex-grow">
                   <div className="flex items-center">
-                    {(imagePreviews[index] || image) ? (
-                      <div className="h-12 w-12 flex-shrink-0 mr-2">
-                        <img
-                          src={imagePreviews[index] || image}
-                          alt={`Preview ${index}`}
-                          className="h-full w-full object-cover rounded"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-12 w-12 flex-shrink-0 bg-gray-200 border border-dashed rounded mr-2" />
-                    )}
-                    <div className="relative flex-grow">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleImageUpload(e, index)}
-                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        ref={index === 0 ? fileInputRef : null}
+                    <div className="h-12 w-12 flex-shrink-0 mr-2">
+                      <img
+                        src={image}
+                        alt={`Car ${index}`}
+                        className="h-full w-full object-cover rounded"
                       />
-                      <button
-                        type="button"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md bg-white text-left font-cambria"
-                      >
-                        {uploading === index
-                          ? 'Uploading...'
-                          : image || imagePreviews[index]
-                            ? 'Change Image'
-                            : 'Select Image'}
-                      </button>
                     </div>
                   </div>
                 </div>
-                {/* Remove button (don't allow removing the first image) */}
-                {index > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => removeImageField(index)}
-                    className="p-1 text-red-600 hover:bg-red-50 rounded"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => removeImage(index)}
+                  className="p-1 text-red-600 hover:bg-red-50 rounded"
+                >
+                  <TrashIcon className="h-5 w-5" />
+                </button>
               </div>
             ))}
+            {/* Show previews for images being uploaded */}
+            {uploading && imagePreviews.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {imagePreviews.map((preview, idx) => (
+                  <img
+                    key={idx}
+                    src={preview}
+                    alt={`Preview ${idx}`}
+                    className="h-12 w-12 object-cover rounded border"
+                  />
+                ))}
+              </div>
+            )}
             <div className="text-sm text-gray-500 italic mt-2 font-cambria">
-              First image will be used as the main display image
+              You can upload multiple images. First image will be used as the main display image.
             </div>
           </div>
         </div>
@@ -731,7 +693,8 @@ const CarFormPage: React.FC = () => {
           </button>
         </div>
       </form>
-    </div>;
+    </div>
+  );
 };
 
 export default CarFormPage;
