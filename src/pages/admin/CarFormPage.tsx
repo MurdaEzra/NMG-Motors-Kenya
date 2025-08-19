@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeftIcon, PlusIcon, TrashIcon, SaveIcon } from 'lucide-react';
 import { Car, fetchCars } from '../../utils/carData';
 import { supabase } from '../../contexts/supabaseClient'; 
+import axios from 'axios';
 
 const CarFormPage: React.FC = () => {
   const navigate = useNavigate();
@@ -73,40 +74,36 @@ const CarFormPage: React.FC = () => {
   // Track local previews for all images
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  // Handle multiple image selection and upload
-  const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  // Replace Supabase upload section
+const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const files = e.target.files;
+  if (!files || files.length === 0) return;
 
-    setUploading(true);
+  setUploading(true);
 
-    // Show local previews immediately
-    const localPreviews = Array.from(files).map(file => URL.createObjectURL(file));
-    setImagePreviews(prev => [...prev, ...localPreviews]);
+  // Show local previews immediately
+  const localPreviews = Array.from(files).map(file => URL.createObjectURL(file));
+  setImagePreviews(prev => [...prev, ...localPreviews]);
 
-    // Upload all images to Supabase
-    const uploadedUrls: string[] = [];
-    for (const file of files) {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${fileName}`;
+  const uploadedUrls: string[] = [];
 
-      const { error } = await supabase.storage
-        .from('car-images')
-        .upload(filePath, file);
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'car-uploads'); // your Cloudinary preset
 
-      if (error) {
-        alert('Image upload failed. Please try again.');
-        setUploading(false);
-        return;
-      }
-
-      const { data } = supabase.storage
-        .from('car-images')
-        .getPublicUrl(filePath);
-
-      uploadedUrls.push(data.publicUrl);
+    try {
+      const res = await axios.post(
+        `https://api.cloudinary.com/v1_1/dgfmhyebp/image/upload`,
+        formData
+      );
+      uploadedUrls.push(res.data.secure_url); 
+      console.log('Cloudinary upload successful:', res.data.secure_url);
+    } catch (err) {
+      console.error('Cloudinary upload failed:', err);
+      alert('Image upload failed. Please try again.');
     }
+  }
 
     // Update formData images with all uploaded URLs
     setFormData(prev => ({
@@ -375,13 +372,13 @@ const CarFormPage: React.FC = () => {
     );
   }
 
+  
+  console.log("Rendering images:", formData.images);
+
   return (
+    <div className="flex flex-col min-h-screen">
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <button onClick={() => navigate('/admin/cars')} className="p-2 hover:bg-gray-200 rounded-full">
-            <ArrowLeftIcon className="h-5 w-5" />
-          </button>
           <h1 className="text-2xl font-bold font-montserrat">
             {isEditing ? 'Edit Car' : 'Add New Car'}
           </h1>
@@ -513,38 +510,44 @@ const CarFormPage: React.FC = () => {
             />
           </div>
           <div className="space-y-4">
-            {(formData.images || []).map((image, index) => (
-              <div key={index} className="flex items-center space-x-4">
-                <div className="flex-grow">
-                  <div className="flex items-center">
-                    <div className="h-12 w-12 flex-shrink-0 mr-2">
-                      <img
-                        src={image}
-                        alt={`Car ${index}`}
-                        className="h-full w-full object-cover rounded"
-                      />
+            {formData.images?.map((image, index) => {
+              console.log(`Rendering image at index ${index}:`, image);
+              return (
+                <div key={index} className="flex items-center space-x-4">
+                  <div className="flex-grow">
+                    <div className="flex items-center">
+                      <div className="aspect-w-1 aspect-h-1 w-full max-w-[96px] mr-2">
+                        <img
+                          src={image}
+                          alt={`Car ${index}`}
+                          className="object-cover rounded w-full h-auto max-h-32"
+                          style={{ aspectRatio: "1 / 1" }}
+                        />
+                      </div>
                     </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="p-1 text-red-600 hover:bg-red-50 rounded"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => removeImage(index)}
-                  className="p-1 text-red-600 hover:bg-red-50 rounded"
-                >
-                  <TrashIcon className="h-5 w-5" />
-                </button>
-              </div>
-            ))}
+              );
+            })}
             {/* Show previews for images being uploaded */}
             {uploading && imagePreviews.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {imagePreviews.map((preview, idx) => (
-                  <img
-                    key={idx}
-                    src={preview}
-                    alt={`Preview ${idx}`}
-                    className="h-12 w-12 object-cover rounded border"
-                  />
+                  <div key={idx} className="aspect-w-1 aspect-h-1 w-full max-w-[96px]">
+                    <img
+                      src={preview}
+                      alt={`Preview ${idx}`}
+                      className="object-cover rounded w-full h-auto max-h-32 border"
+                      style={{ aspectRatio: "1 / 1" }}
+                    />
+                  </div>
                 ))}
               </div>
             )}

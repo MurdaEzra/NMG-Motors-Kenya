@@ -12,6 +12,7 @@ const CarCard: React.FC<CarCardProps> = ({
       <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 group-hover:-translate-y-1 h-full flex flex-col">
         <div className="relative h-48 overflow-hidden">
           <img src={car.images[0]} alt={`${car.brand} ${car.model}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+
           {car.featured && <span className="absolute top-2 left-2 bg-[#E6AF2E] text-[#001514] text-xs font-bold px-2 py-1 rounded">
               Featured
             </span>}

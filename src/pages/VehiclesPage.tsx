@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCars, FilterOptions, filterCars } from '../utils/carData';
+import { fetchCars, FilterOptions, filterCars, Car } from '../utils/carData';
 import CarCard from '../components/CarCard';
 import FilterSection from '../components/FilterSection';
 import { SearchIcon } from 'lucide-react';
 
 const VehiclesPage = () => {
-  const [cars, setCars] = useState([]);
-  const [filteredCars, setFilteredCars] = useState([]);
+  const [cars, setCars] = useState<Car[]>([]);
+  const [filteredCars, setFilteredCars] = useState<Car[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -19,10 +20,11 @@ const VehiclesPage = () => {
   }, []);
 
   // Handle filter changes
-  const handleFilterChange = (filters: FilterOptions) => {
+  const handleFilterChange = (newFilters: FilterOptions) => {
     setIsLoading(true);
+    setFilters(newFilters);
     setTimeout(() => {
-      const filtered = filterCars(cars, filters);
+      const filtered = filterCars(cars, newFilters);
       const searchFiltered = searchTerm
         ? filtered.filter(car =>
             `${car.brand} ${car.model}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -37,8 +39,27 @@ const VehiclesPage = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    // Reapply filters with search term
-    handleFilterChange({});
+    setIsLoading(true);
+    setTimeout(() => {
+      const filtered = filterCars(cars, filters);
+      const searchFiltered = value
+        ? filtered.filter(car =>
+            `${car.brand} ${car.model}`.toLowerCase().includes(value.toLowerCase())
+          )
+        : filtered;
+      setFilteredCars(searchFiltered);
+      setIsLoading(false);
+    }, 500);
+  };
+
+  const handleResetFilters = () => {
+    setSearchTerm('');
+    setFilters({});
+    setIsLoading(true);
+    setTimeout(() => {
+      setFilteredCars(cars);
+      setIsLoading(false);
+    }, 500);
   };
 
   return (
@@ -67,7 +88,7 @@ const VehiclesPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filter Column */}
           <div className="lg:col-span-1">
-            <FilterSection onFilterChange={handleFilterChange} />
+            <FilterSection onFilterChange={handleFilterChange} filters={filters} />
           </div>
           {/* Vehicles Grid */}
           <div className="lg:col-span-3">
@@ -88,10 +109,7 @@ const VehiclesPage = () => {
                   Try adjusting your filters or search criteria
                 </p>
                 <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    handleFilterChange({});
-                  }}
+                  onClick={handleResetFilters}
                   className="text-[#A3320B] font-medium hover:text-[#6B0504]"
                 >
                   Reset all filters

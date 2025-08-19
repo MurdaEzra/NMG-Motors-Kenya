@@ -58,6 +58,7 @@ export const fetchCars = async (): Promise<Car[]> => {
       available,
       featured,
       description,
+      images,
       additional_specs (
         sunroof,
         trimmings,
@@ -79,10 +80,8 @@ export const fetchCars = async (): Promise<Car[]> => {
         electronics,
         suspension,
         brakes
-      ),
-      car_images (
-        image_url
       )
+     
     `);
 
   if (error) {
@@ -104,9 +103,7 @@ export const fetchCars = async (): Promise<Car[]> => {
     torque: car.torque,
     available: car.available,
     featured: car.featured,
-    images: Array.isArray(car.car_images)
-      ? car.car_images.map((img: any) => img.image_url)
-      : [],
+    images: Array.isArray(car.images) ? car.images : [],
     description: car.description,
     additionalSpecs: {
       sunroof: car.additional_specs?.sunroof ?? false,
@@ -132,6 +129,7 @@ export const fetchCars = async (): Promise<Car[]> => {
     }
   }));
 };
+
 
 // Helper: Get similar cars
 export const getSimilarCars = (cars: Car[], currentCarId: string, brand: string, limit: number = 3): Car[] => {

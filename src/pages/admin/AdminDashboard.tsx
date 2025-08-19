@@ -124,12 +124,25 @@ const AdminDashboard: React.FC = () => {
                   const issues = Object.entries(car.additionalSpecs.condition)
                     .filter(([_, value]) => !value)
                     .map(([key]) => key);
+                  // Defensive: get the first image or a placeholder
+                  const imageUrl =
+                    car.images && car.images[0]
+                      ? car.images[0]
+                      : "https://placehold.co/80x80?text=No+Image";
                   return (
                     <tr key={car.id}>
                       <td className="px-4 py-3">
                         <div className="flex items-center">
                           <div className="h-10 w-10 flex-shrink-0">
-                            <img src={car.images[0]} alt={car.brand} className="h-10 w-10 rounded-full object-cover" />
+                            <img
+                              src={imageUrl}
+                              alt={car.brand}
+                              className="h-10 w-10 rounded-full object-cover"
+                              onError={e => {
+                                (e.target as HTMLImageElement).src =
+                                  "https://placehold.co/80x80?text=No+Image";
+                              }}
+                            />
                           </div>
                           <div className="ml-3">
                             <p className="font-medium text-gray-900">
@@ -148,14 +161,20 @@ const AdminDashboard: React.FC = () => {
                       <td className="px-4 py-3">
                         <div>
                           {issues.map(issue => (
-                            <span key={issue} className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mr-1 mb-1 capitalize">
+                            <span
+                              key={issue}
+                              className="inline-block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full mr-1 mb-1 capitalize"
+                            >
                               {issue}
                             </span>
                           ))}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <Link to={`/admin/cars/edit/${car.id}`} className="text-blue-600 hover:text-blue-800">
+                        <Link
+                          to={`/admin/cars/edit/${car.id}`}
+                          className="text-blue-600 hover:text-blue-800"
+                        >
                           Edit
                         </Link>
                       </td>

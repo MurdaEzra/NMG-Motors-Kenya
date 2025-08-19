@@ -23,10 +23,10 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-1 left-1 right-1 
+      className={`sticky top-0
         bg-[#001514]/90 backdrop-blur-lg text-[#FBFFFE] border border-gray-700/30
-        rounded-full z-50 transition-all duration-300
-        ${scrolled ? 'shadow-xl scale-95' : 'shadow-lg scale-100'}`}
+        z-50 transition-all duration-300
+        ${scrolled ? 'shadow-md' : 'shadow-sm'}`}
     >
       <div className="flex justify-between items-center px-6 py-3">
         <Link to="/" className="flex items-center space-x-2">
