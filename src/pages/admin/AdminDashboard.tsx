@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CarIcon, PlusCircleIcon, CheckCircleIcon, XCircleIcon, TrendingUpIcon, AlertTriangleIcon } from 'lucide-react';
 import { fetchCars } from '../../utils/carData';
+import type { Car } from '../../utils/carData';
 
 const AdminDashboard: React.FC = () => {
-  const [cars, setCars] = useState([]);
+  const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

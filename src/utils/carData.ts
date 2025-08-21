@@ -168,9 +168,9 @@ export const filterCars = (cars: Car[], options: FilterOptions): Car[] => {
 };
 
 // Get unique brands
-export const getUniqueBrands = (cars: Car[]): string[] => {
-  return [...new Set(cars.map(car => car.brand))];
-};
+export function getUniqueBrands(cars: Car[] = []): string[] {
+  return cars.map(car => car.brand).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i);
+}
 
 // Get price range
 export const getPriceRange = (cars: Car[]): { min: number; max: number } => {

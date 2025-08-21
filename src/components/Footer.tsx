@@ -66,11 +66,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <PhoneIcon className="h-5 w-5 mr-2 text-[#E6AF2E]" />
-                <span>+254 700 000 000</span>
+                <span>+254 711675704</span>
               </li>
               <li className="flex items-center">
                 <MailIcon className="h-5 w-5 mr-2 text-[#E6AF2E]" />
-                <span>info@nmgmotors.co.ke</span>
+                <span>nmgmotorskenya@gmail.com</span>
               </li>
             </ul>
           </div>

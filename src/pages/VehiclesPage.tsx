@@ -88,7 +88,7 @@ const VehiclesPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filter Column */}
           <div className="lg:col-span-1">
-            <FilterSection onFilterChange={handleFilterChange} filters={filters} />
+            <FilterSection onFilterChange={handleFilterChange} filters={filters} cars={cars} />
           </div>
           {/* Vehicles Grid */}
           <div className="lg:col-span-3">

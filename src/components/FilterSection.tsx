@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { FilterIcon } from 'lucide-react';
 import { FilterOptions, getUniqueBrands, getPriceRange, getYearRange } from '../utils/carData';
+import type { Car } from '../utils/carData';
+
 interface FilterSectionProps {
   onFilterChange: (filters: FilterOptions) => void;
+  filters?: FilterOptions;
+  cars: Car[]; // Add this line
 }
 const FilterSection: React.FC<FilterSectionProps> = ({
-  onFilterChange
+  onFilterChange,
+  filters,
+  cars // Add this line
 }) => {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 15000000]);
   const [yearRange, setYearRange] = useState<[number, number]>([2010, 2023]);
-  const brands = getUniqueBrands();
-  const defaultPriceRange = getPriceRange();
-  const defaultYearRange = getYearRange();
+  const brands = getUniqueBrands(cars); // Pass cars here
+  const defaultPriceRange = getPriceRange(cars);
+  const defaultYearRange = getYearRange(cars);
   useEffect(() => {
     // Set initial ranges
     setPriceRange([defaultPriceRange.min, defaultPriceRange.max]);
@@ -29,6 +35,13 @@ const FilterSection: React.FC<FilterSectionProps> = ({
       maxYear: yearRange[1]
     });
   }, [selectedBrands, priceRange, yearRange, onFilterChange]);
+  useEffect(() => {
+    const priceRange = getPriceRange(cars);
+    const yearRange = getYearRange(cars);
+    setPriceRange([priceRange.min, priceRange.max]);
+    setYearRange([yearRange.min, yearRange.max]);
+    setSelectedBrands([]);
+  }, [cars]);
   const toggleBrand = (brand: string) => {
     if (selectedBrands.includes(brand)) {
       setSelectedBrands(selectedBrands.filter(b => b !== brand));

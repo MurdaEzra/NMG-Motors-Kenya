@@ -160,24 +160,18 @@ const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   };
   // Handle additional specs changes
   const handleSpecsChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const {
-      name,
-      value,
-      type
-    } = e.target;
-    // Handle checkbox fields
+    const { name, value, type } = e.target;
     if (type === 'checkbox') {
-      const checkbox = e.target as HTMLInputElement;
+      const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({
         ...prev,
         additionalSpecs: {
           ...prev.additionalSpecs!,
-          [name]: checkbox.checked
+          [name]: checked
         }
       }));
       return;
     }
-    // Handle number fields
     if (type === 'number') {
       setFormData(prev => ({
         ...prev,
@@ -188,7 +182,6 @@ const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     }));
       return;
     }
-    // Handle other fields
     setFormData(prev => ({
       ...prev,
       additionalSpecs: {
@@ -199,10 +192,7 @@ const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
   };
   // Handle condition changes
   const handleConditionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      name,
-      checked
-    } = e.target;
+    const { name, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       additionalSpecs: {

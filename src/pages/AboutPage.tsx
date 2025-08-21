@@ -14,7 +14,7 @@ const AboutPage = () => {
             About NMG Motors Kenya
           </h1>
           <p className="text-xl text-white max-w-2xl">
-            Your trusted partner in finding the perfect vehicle since 2010
+            Your trusted partner in finding the perfect vehicle since 2023
           </p>
         </div>
       </section>
@@ -27,20 +27,20 @@ const AboutPage = () => {
                 Our Story
               </h2>
               <p className="text-gray-700 mb-4">
-                NMG Motors Kenya was established in 2010 with a vision to
+                NMG Motors Kenya was established in 2023 with a vision to
                 transform the automotive market in Kenya by providing
                 high-quality vehicles at competitive prices. What started as a
                 small dealership has grown into one of the most trusted names in
                 the Kenyan automotive industry.
               </p>
               <p className="text-gray-700 mb-4">
-                Our founder, Mr. James Mwangi, began with a simple mission: to
+                Our founder, Mr. Sendora, began with a simple mission: to
                 create a car buying experience that prioritizes customer
                 satisfaction, transparency, and quality. Today, that mission
                 continues to drive every aspect of our business.
               </p>
               <p className="text-gray-700">
-                With over a decade of experience, we've helped thousands of
+                With years of experience, we've helped thousands of
                 Kenyans find their perfect vehicle, from family cars to luxury
                 models and commercial vehicles. Our commitment to excellence has
                 earned us a reputation as a leader in the automotive market.
