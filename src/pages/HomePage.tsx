@@ -11,17 +11,17 @@ const HomePage = () => {
   // Slideshow images
   const slides = [
     {
-      image: "https://img.freepik.com/free-photo/elegant-white-car-stands-dealer-s-showroom_146671-16260.jpg",
+      image: "/src/images/premium.jpg",
       title: "Premium Vehicles",
       desc: "Experience unmatched comfort, style, and performance.",
     },
     {
-      image: "https://img.freepik.com/free-photo/luxury-sports-car-city_1232-3486.jpg",
+      image: "/src/images/luxury.jpg",
       title: "Luxury Vehicles",
       desc: "Indulge in world-class craftsmanship and cutting-edge technology.",
     },
     {
-      image: "https://img.freepik.com/free-photo/family-car-traveling_1127-3220.jpg",
+      image: "/src/images/family.jpg",
       title: "Family Vehicles",
       desc: "Spacious, safe, and designed for every family adventure.",
     },
@@ -63,7 +63,7 @@ const HomePage = () => {
           }`}
           style={{
             backgroundImage: `url(${slides[currentSlide].image})`,
-            backgroundPosition: 'center 30%',
+            backgroundPosition: 'center 50%',
           }}
         ></div>
         {/* Dark overlay */}
