@@ -11,17 +11,17 @@ const HomePage = () => {
   // Slideshow images
   const slides = [
     {
-      image: "/src/images/premium.jpg",
+      image: "https://res.cloudinary.com/dgfmhyebp/image/upload/v1755840500/premium_qejrk2.jpg",
       title: "Premium Vehicles",
       desc: "Experience unmatched comfort, style, and performance.",
     },
     {
-      image: "/src/images/luxury.jpg",
+      image: "https://res.cloudinary.com/dgfmhyebp/image/upload/v1755840509/luxury_vfm3w0.jpg",
       title: "Luxury Vehicles",
       desc: "Indulge in world-class craftsmanship and cutting-edge technology.",
     },
     {
-      image: "/src/images/family.jpg",
+      image: "https://res.cloudinary.com/dgfmhyebp/image/upload/v1755442333/wemqcdiby1ibywpvbko3.jpg",
       title: "Family Vehicles",
       desc: "Spacious, safe, and designed for every family adventure.",
     },
